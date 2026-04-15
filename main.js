@@ -79,8 +79,8 @@ class HeroEffect {
                     float depth2 = texture2D(uDepth2, vUv).r;
                     
                     // Parallax for each layer
-                    vec2 displacement1 = uMouse * depth1 * 0.08;
-                    vec2 displacement2 = uMouse * depth2 * 0.12;
+                    vec2 displacement1 = uMouse * depth1 * 0.015;
+                    vec2 displacement2 = uMouse * depth2 * 0.03;
                     
                     vec2 uv1 = vUv + displacement1;
                     vec2 uv2 = vUv + displacement2;
