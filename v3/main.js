@@ -18,6 +18,7 @@ class HeroEffect {
         this.mouse = new THREE.Vector2(0, 0);
         this.targetMouse = new THREE.Vector2(0, 0);
         this.reveal = 0;
+        this.clickReveal = 0;
         
         this.init();
     }
@@ -57,6 +58,7 @@ class HeroEffect {
                 uMouse: { value: new THREE.Vector2(0, 0) },
                 uTime: { value: 0.0 },
                 uReveal: { value: 0.0 },
+                uClickReveal: { value: 0.0 },
                 uResolution: { value: new THREE.Vector4() }
             },
             vertexShader: `
@@ -74,6 +76,7 @@ class HeroEffect {
                 uniform vec2 uMouse;
                 uniform float uTime;
                 uniform float uReveal;
+                uniform float uClickReveal;
                 varying vec2 vUv;
 
                 void main() {
@@ -97,11 +100,11 @@ class HeroEffect {
                     float dist = distance(vUv, mouseUv);
                     
                     // Liquid effect with time
-                    float ripple = sin(vUv.x * 15.0 + uTime) * cos(vUv.y * 15.0 + uTime * 0.5) * 0.02;
-                    float maskRadius = (0.18 + (uReveal * 1.5)) + ripple;
-                    float maskBlur = 0.15 + (uReveal * 0.2);
+                    float ripple = sin(vUv.x * 15.0 + uTime) * cos(vUv.y * 15.0 + uTime * 0.5) * 0.015 * uReveal;
+                    float maskRadius = (0.08 * uReveal) + (uClickReveal * 1.5) + ripple;
+                    float maskBlur = 0.08 + (uClickReveal * 0.2);
                     
-                    float mask = 1.0 - smoothstep(maskRadius, maskRadius + maskBlur, dist);
+                    float mask = (1.0 - smoothstep(maskRadius, maskRadius + maskBlur, dist)) * max(uReveal, uClickReveal);
                     
                     gl_FragColor = mix(color1, color2, mask);
                 }
@@ -117,35 +120,103 @@ class HeroEffect {
     }
 
     setupEvents() {
-        window.addEventListener('mousemove', (e) => {
+        this.isHovered = false;
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        // Track mouse/pointer position and trigger hover reveal on desktop
+        window.addEventListener('pointermove', (e) => {
             this.targetMouse.x = (e.clientX / window.innerWidth) - 0.5;
             this.targetMouse.y = -(e.clientY / window.innerHeight) + 0.5;
+
+            // On desktop mouse movement, if not already in hovered state, trigger reveal
+            if (e.pointerType === 'mouse' && !this.isHovered) {
+                this.isHovered = true;
+                gsap.to(this, { 
+                    reveal: 1, 
+                    duration: 1.2, 
+                    ease: "power2.out",
+                    overwrite: "auto"
+                });
+            }
         });
 
-        window.addEventListener('mousedown', () => {
-            gsap.to(this, { reveal: 1, duration: 1, ease: "power2.inOut" });
+        // Hide when mouse leaves the window
+        document.addEventListener('pointerleave', (e) => {
+            if (e.pointerType === 'mouse') {
+                this.isHovered = false;
+                gsap.to(this, { 
+                    reveal: 0, 
+                    clickReveal: 0,
+                    duration: 1.2, 
+                    ease: "power2.out",
+                    overwrite: "auto"
+                });
+            }
+        });
+
+        // Desktop Click: Full Reveal
+        window.addEventListener('mousedown', (e) => {
+            if (e.button === 0) { // Left click
+                gsap.to(this, { 
+                    clickReveal: 1, 
+                    duration: 1.5, 
+                    ease: "power3.out", 
+                    overwrite: "auto" 
+                });
+            }
         });
 
         window.addEventListener('mouseup', () => {
-            gsap.to(this, { reveal: 0, duration: 1, ease: "power2.inOut" });
+            gsap.to(this, { 
+                clickReveal: 0, 
+                duration: 1.2, 
+                ease: "power2.out", 
+                overwrite: "auto" 
+            });
         });
 
-        // Mobile touch events
+        // Mobile/Touch: Reveal parts on touch/drag, full reveal on long press (holding the touch)
         window.addEventListener('touchstart', (e) => {
+            this.isHovered = false; // Reset hover state on touch
             if (e.touches && e.touches.length > 0) {
                 this.targetMouse.x = (e.touches[0].clientX / window.innerWidth) - 0.5;
                 this.targetMouse.y = -(e.touches[0].clientY / window.innerHeight) + 0.5;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
             }
-            gsap.to(this, { reveal: 1, duration: 1, ease: "power2.inOut" });
+            gsap.to(this, { reveal: 1, duration: 1.2, ease: "power2.out", overwrite: "auto" });
+
+            // Start timer for mobile full reveal (long press / holding down)
+            clearTimeout(this.touchTimeout);
+            this.touchTimeout = setTimeout(() => {
+                gsap.to(this, { clickReveal: 1, duration: 1.5, ease: "power3.out", overwrite: "auto" });
+            }, 350); // 350ms holding down triggers full reveal
         });
+
         window.addEventListener('touchmove', (e) => {
             if (e.touches && e.touches.length > 0) {
                 this.targetMouse.x = (e.touches[0].clientX / window.innerWidth) - 0.5;
                 this.targetMouse.y = -(e.touches[0].clientY / window.innerHeight) + 0.5;
+
+                // If user drags/moves finger significantly, cancel the full-reveal timer (keep it a local lens reveal)
+                const dx = e.touches[0].clientX - touchStartX;
+                const dy = e.touches[0].clientY - touchStartY;
+                if (Math.sqrt(dx * dx + dy * dy) > 15) {
+                    clearTimeout(this.touchTimeout);
+                }
             }
         });
+
         window.addEventListener('touchend', () => {
-             gsap.to(this, { reveal: 0, duration: 1, ease: "power2.inOut" });
+             clearTimeout(this.touchTimeout);
+             gsap.to(this, { 
+                 reveal: 0, 
+                 clickReveal: 0, 
+                 duration: 1.2, 
+                 ease: "power2.out", 
+                 overwrite: "auto" 
+             });
         });
 
         window.addEventListener('resize', () => {
@@ -191,6 +262,7 @@ class HeroEffect {
             this.material.uniforms.uMouse.value.set(this.mouse.x, this.mouse.y);
             this.material.uniforms.uTime.value = this.clock.getElapsedTime();
             this.material.uniforms.uReveal.value = this.reveal;
+            this.material.uniforms.uClickReveal.value = this.clickReveal;
         }
         
         this.renderer.render(this.scene, this.camera);
