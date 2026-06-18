@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #050505;
+    font-family: 'Outfit', sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+#container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+.ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    padding: 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    pointer-events: none;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 900;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+}
+
+p {
+    font-size: 1.2rem;
+    opacity: 0.6;
+    max-width: 400px;
+    margin-top: 20px;
+}
+
+.ui::after {
+    content: "DRAG / HOLD";
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    letter-spacing: 0.4em;
+    opacity: 0.4;
+}
