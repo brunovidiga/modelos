@@ -7,34 +7,321 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div id="container"></div>
-
-    <div class="ui">
-        <div class="slide-info">
-            <span class="slide-number"></span>
-            <h2 class="slide-name"></h2>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <span class="site-logo-halo"></span>
+            <img class="site-logo" src="/img/logo.png" alt="Animale">
         </div>
-    </div>
+    </header>
 
-    <div class="nav">
-        <button class="nav-arrow prev" aria-label="Anterior">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-        <div class="nav-dots">
-            <span class="nav-dot active" data-index="0"></span>
-            <span class="nav-dot" data-index="1"></span>
-            <span class="nav-dot" data-index="2"></span>
-            <span class="nav-dot" data-index="3"></span>
+    <section class="hero-section">
+        <div id="container"></div>
+
+        <div class="ui">
+            <div class="slide-info">
+                <span class="slide-number"></span>
+                <h2 class="slide-name"></h2>
+            </div>
         </div>
-        <button class="nav-arrow next" aria-label="Próximo">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </button>
-    </div>
+
+        <div class="nav">
+            <button class="nav-arrow prev" aria-label="Anterior">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <div class="nav-dots">
+                <span class="nav-dot active" data-index="0"></span>
+                <span class="nav-dot" data-index="1"></span>
+                <span class="nav-dot" data-index="2"></span>
+                <span class="nav-dot" data-index="3"></span>
+            </div>
+            <button class="nav-arrow next" aria-label="Próximo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <section id="collection" class="collection-section" aria-labelledby="collectionTitle">
+        <div id="productStory" class="product-story">
+            <div class="product-pin">
+                <div class="product-header">
+                    <span>Selected forms</span>
+                    <span id="productCounter">01 / 05</span>
+                </div>
+
+                <div id="productTrack" class="product-track">
+                    <article class="product-slide product-slide--cream">
+                        <div class="product-slide-content">
+                            <p class="product-meta">001 / Tecido leve</p>
+                            <h3 class="product-title">O Vestido Oceano</h3>
+                            <p class="product-copy">Em azul profundo com estampas orgânicas, o tecido ganha movimento em uma silhueta fluida e elegante, feita para acompanhar a luz, o vento e o corpo.</p>
+                            <button type="button" class="product-action product-action--dark">View</button>
+                        </div>
+                        <div class="product-visual">
+                            <img class="product-image object-pos-left" src="/img/oceano.webp" alt="O Vestido Oceano">
+                        </div>
+                    </article>
+
+                    <article class="product-slide product-slide--red">
+                        <div class="product-slide-content">
+                            <p class="product-meta">002 / Malha Estruturada</p>
+                            <h3 class="product-title">O Vestido Siena</h3>
+                            <p class="product-copy">Em tons terrosos e linhas precisas, a malha acompanha o corpo com suavidade, criando uma silhueta alongada e elegantemente atemporal.</p>
+                            <button type="button" class="product-action product-action--light">View</button>
+                        </div>
+                        <div class="product-visual">
+                            <img class="product-image object-pos-siena" src="/img/siena.webp" alt="O Vestido Siena">
+                        </div>
+                    </article>
+
+                    <article class="product-slide product-slide--dark">
+                        <div class="product-slide-content">
+                            <p class="product-meta">003 / Couro Super Leve</p>
+                            <h3 class="product-title">A Calça Blake</h3>
+                            <p class="product-copy">Sofisticado e caimento preciso. Uma peça que une a força do couro à leveza de uma silhueta fluida.</p>
+                            <button type="button" class="product-action product-action--light">View</button>
+                        </div>
+                        <div class="product-visual">
+                            <img class="product-image" src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/6dbbbbe0-0fea-44f4-97a1-a9493024f5dc_3840w.png" alt="A Calça Blake">
+                        </div>
+                    </article>
+
+                    <article class="product-slide product-slide--cream">
+                        <div class="product-slide-content">
+                            <p class="product-meta">004 / Heavy cashmere</p>
+                            <h3 class="product-title">O Casaco Arlo</h3>
+                            <p class="product-copy">Cashmere verde de toque absoluto, com silhueta fluida e construção precisa. Uma peça feita para permanecer além da estação.</p>
+                            <button type="button" class="product-action product-action--dark">View</button>
+                        </div>
+                        <div class="product-visual">
+                            <img class="product-image" src="/img/arlo.webp" alt="O Casaco Arlo">
+                        </div>
+                    </article>
+
+                    <article class="product-slide product-slide--ivory">
+                        <div class="product-slide-content">
+                            <p class="product-meta">005 / Algodão Premium</p>
+                            <h3 class="product-title">A Blusa Aurora</h3>
+                            <p class="product-copy">Listras delicadas, volume e caimento natural em uma peça que transforma simplicidade em elegância contemporânea.</p>
+                            <button type="button" class="product-action product-action--dark">View</button>
+                        </div>
+                        <div class="product-visual">
+                            <img class="product-image" src="/img/blusa.webp" alt="A Blusa Aurora">
+                        </div>
+                    </article>
+                </div>
+
+                <div class="product-progress-track">
+                    <div id="productProgress" class="product-progress"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="wardrobe" class="wardrobe-section" aria-label="Guarda-Roupa de Assinatura">
+        <canvas id="wardrobeCanvas" class="wardrobe-canvas"></canvas>
+
+        <div class="wardrobe-bg"></div>
+        <div class="wardrobe-grid"></div>
+
+        <div class="wardrobe-content">
+            <div class="wardrobe-label">Seu Guarda-Roupa Definitivo</div>
+
+            <h2 class="wardrobe-headline">Essenciais<br>de Luxo<br>Silencioso</h2>
+
+            <div id="wardrobeSculpture" class="wardrobe-sculpture">
+                <div class="wardrobe-sculpture-glow"></div>
+                <div class="wardrobe-card">
+                    <img class="wardrobe-card-img" src="/img/5.webp" alt="LIORA editorial wardrobe">
+                    <div class="wardrobe-card-shade"></div>
+                    <span class="wardrobe-badge">Outono Inverno 2026</span>
+                    <div class="wardrobe-card-footer">
+                        <span class="wardrobe-kicker"><i></i>Seleção editorial</span>
+                        <h3>Costuras suaves<br>para dia e noite.</h3>
+                        <p>Uma edição refinada com design de vestidos essenciais.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="wardrobeCards" class="wardrobe-cards">
+                <article class="service-card">
+                    <div class="wardrobe-card-tag">01 / Vestuário Diário</div>
+                    <div class="wardrobe-card-rule"></div>
+                    <h3>Vestuário Moderno</h3>
+                    <p>Costuras relaxadas, camadas afiadas e básicos elevados projetados para elegância cotidiana.</p>
+                </article>
+
+                <article class="service-card">
+                    <div class="wardrobe-card-tag">02 / Noite</div>
+                    <div class="wardrobe-card-rule"></div>
+                    <h3>Vestuário Noturno</h3>
+                    <p>Silhuetas minimalistas, linhas limpas e peças marcantes para noites refinadas.</p>
+                </article>
+
+                <article class="service-card">
+                    <div class="wardrobe-card-tag">03 / Malhas</div>
+                    <div class="wardrobe-card-rule"></div>
+                    <h3>Malhas de Luxo</h3>
+                    <p>Texturas suaves, cores silenciosas e básicas versáteis que ancora o guarda-roupa.</p>
+                </article>
+
+                <article class="service-card">
+                    <div class="wardrobe-card-tag">04 / Casacos</div>
+                    <div class="wardrobe-card-rule"></div>
+                    <h3>Casacos</h3>
+                    <p>Casacos de assinatura e camadas estruturadas que trazem clareza e forma a cada visual.</p>
+                </article>
+            </div>
+
+            <div id="wardrobeBottomBar" class="wardrobe-bottombar">
+                <span>Costuras / Malhas / Vestidos / Casacos</span>
+                <span class="wardrobe-bottombar-logo">FERALAS</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="store" class="store-section">
+        <div class="store-container">
+            <div class="store-head">
+                <h2 class="store-title reveal">
+                    Melhores escolhas<br>para você. <span class="store-script">tendências</span>
+                </h2>
+            </div>
+
+            <div class="store-grid">
+                <article class="store-card">
+                    <div class="store-card-media">
+                        <img src="/img/sh1.webp" alt="Vestido Alma Clara">
+                        <button type="button" class="store-wish" aria-label="Favoritar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        </button>
+                        <div class="store-card-cta">
+                            <button type="button">Descubra os detalhes</button>
+                        </div>
+                        <div class="store-colors">
+                            <span class="store-color" style="background: #44403c"></span>
+                            <span class="store-color" style="background: #065f46"></span>
+                            <span class="store-color" style="background: #b45309"></span>
+                        </div>
+                    </div>
+                    <div class="store-card-info">
+                        <div>
+                            <h3>Vestido Alma Clara</h3>
+                            <div class="store-rating">
+                                <span class="store-stars">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                </span>
+                                (112 avaliações)
+                            </div>
+                        </div>
+                        <p class="store-price">$159.00</p>
+                    </div>
+                </article>
+
+                <article class="store-card">
+                    <div class="store-card-media">
+                        <img src="/img/sh2.webp" alt="Bolsa Lumina">
+                        <button type="button" class="store-wish" aria-label="Favoritar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        </button>
+                        <div class="store-card-cta">
+                            <button type="button">Descubra os detalhes</button>
+                        </div>
+                        <div class="store-colors">
+                            <span class="store-color" style="background: #4d7c0f"></span>
+                            <span class="store-color" style="background: #1c1917"></span>
+                        </div>
+                    </div>
+                    <div class="store-card-info">
+                        <div>
+                            <h3>Bolsa Lumina</h3>
+                            <div class="store-rating">
+                                <span class="store-stars">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg class="star-empty" viewBox="0 0 24 24"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                </span>
+                                (67 avaliações)
+                            </div>
+                        </div>
+                        <p class="store-price">$189.00</p>
+                    </div>
+                </article>
+
+                <article class="store-card">
+                    <div class="store-card-media">
+                        <img src="/img/sh3.webp" alt="Casaco Arlo Terra">
+                        <button type="button" class="store-wish" aria-label="Favoritar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        </button>
+                        <div class="store-card-cta">
+                            <button type="button">Descubra os detalhes</button>
+                        </div>
+                        <span class="store-badge">New</span>
+                    </div>
+                    <div class="store-card-info">
+                        <div>
+                            <h3>Casaco Arlo Terra</h3>
+                            <div class="store-rating">
+                                <span class="store-stars">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                </span>
+                                (203 avaliações)
+                            </div>
+                        </div>
+                        <p class="store-price">$74.00</p>
+                    </div>
+                </article>
+
+                <article class="store-card">
+                    <div class="store-card-media">
+                        <img src="/img/sh4.webp" alt="Vestido Brezza">
+                        <button type="button" class="store-wish" aria-label="Favoritar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                        </button>
+                        <div class="store-card-cta">
+                            <button type="button">Descubra os detalhes</button>
+                        </div>
+                        <div class="store-colors">
+                            <span class="store-color" style="background: #064e3b"></span>
+                            <span class="store-color" style="background: #78716c"></span>
+                        </div>
+                    </div>
+                    <div class="store-card-info">
+                        <div>
+                            <h3>Vestido Brezza</h3>
+                            <div class="store-rating">
+                                <span class="store-stars">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                    <svg class="star-empty" viewBox="0 0 24 24"><path d="M12 2l2.96 6.26 6.84.97-4.98 4.8 1.2 6.77L12 17.27 5.98 20.8l1.2-6.77L2.2 9.23l6.84-.97z"/></svg>
+                                </span>
+                                (48 avaliações)
+                            </div>
+                        </div>
+                        <p class="store-price">$96.00</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
 
     <script type="module" src="./main.js"></script>
+
 </body>
 </html>

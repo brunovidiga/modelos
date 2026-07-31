@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 class HeroSlider {
     constructor() {
@@ -44,32 +47,33 @@ class HeroSlider {
 
     async init() {
         this.textures = [];
+        this.slidesLoaded = 1;
 
-        for (const slide of this.slides) {
-            const [model, animal, depthModel, depthAnimal] = await Promise.all([
-                this.loadTexture(slide.model),
-                this.loadTexture(slide.animal),
-                this.loadTexture(slide.depthModel),
-                this.loadTexture(slide.depthAnimal)
-            ]);
-            this.textures.push({ model, animal, depthModel, depthAnimal });
-        }
+        // Load only the first slide → renders immediately
+        const [m0, a0, d0, da0] = await Promise.all([
+            this.loadTexture(this.slides[0].model),
+            this.loadTexture(this.slides[0].animal),
+            this.loadTexture(this.slides[0].depthModel),
+            this.loadTexture(this.slides[0].depthAnimal)
+        ]);
+        this.textures[0] = { model: m0, animal: a0, depthModel: d0, depthAnimal: da0 };
 
-        const img = this.textures[0].model.image;
+        const img = m0.image;
         this.imgAspect = img.width / img.height;
 
         const geometry = new THREE.PlaneGeometry(1, 1, 64, 64);
 
+        // Use first slide textures as placeholder for "next" too
         this.material = new THREE.ShaderMaterial({
             uniforms: {
-                uTexture1: { value: this.textures[0].model },
-                uTexture2: { value: this.textures[0].animal },
-                uDepth1: { value: this.textures[0].depthModel },
-                uDepth2: { value: this.textures[0].depthAnimal },
-                uTexture1Next: { value: this.textures[1].model },
-                uTexture2Next: { value: this.textures[1].animal },
-                uDepth1Next: { value: this.textures[1].depthModel },
-                uDepth2Next: { value: this.textures[1].depthAnimal },
+                uTexture1: { value: m0 },
+                uTexture2: { value: a0 },
+                uDepth1: { value: d0 },
+                uDepth2: { value: da0 },
+                uTexture1Next: { value: m0 },
+                uTexture2Next: { value: a0 },
+                uDepth1Next: { value: d0 },
+                uDepth2Next: { value: da0 },
                 uMouse: { value: new THREE.Vector2(0, 0) },
                 uTime: { value: 0.0 },
                 uReveal: { value: 0.0 },
@@ -140,6 +144,39 @@ class HeroSlider {
         this.setupEvents();
         this.setupNavigation();
         this.animate();
+
+        // Load remaining slides in background
+        this.loadRemainingSlides();
+    }
+
+    async loadRemainingSlides() {
+        const promises = [];
+        for (let i = 1; i < this.slides.length; i++) {
+            const s = this.slides[i];
+            promises.push(
+                Promise.all([
+                    this.loadTexture(s.model),
+                    this.loadTexture(s.animal),
+                    this.loadTexture(s.depthModel),
+                    this.loadTexture(s.depthAnimal)
+                ]).then(([model, animal, depthModel, depthAnimal]) => {
+                    this.textures[i] = { model, animal, depthModel, depthAnimal };
+                    this.slidesLoaded = i + 1;
+                })
+            );
+        }
+        await Promise.all(promises);
+        this.refreshNextTextures();
+    }
+
+    refreshNextTextures() {
+        const next = (this.currentSlide + 1) % this.totalSlides;
+        if (this.textures[next]) {
+            this.material.uniforms.uTexture1Next.value = this.textures[next].model;
+            this.material.uniforms.uTexture2Next.value = this.textures[next].animal;
+            this.material.uniforms.uDepth1Next.value = this.textures[next].depthModel;
+            this.material.uniforms.uDepth2Next.value = this.textures[next].depthAnimal;
+        }
     }
 
     setupNavigation() {
@@ -162,6 +199,7 @@ class HeroSlider {
     async goToSlide(index) {
         if (this.isTransitioning || index === this.currentSlide) return;
         if (index < 0 || index >= this.totalSlides) return;
+        if (!this.textures[index]) return;
 
         this.isTransitioning = true;
         const prevIndex = this.currentSlide;
@@ -185,6 +223,7 @@ class HeroSlider {
                 this.updateUI();
                 this.isHovered = false;
                 this.isTransitioning = false;
+                this.refreshNextTextures();
             }
         });
 
@@ -339,3 +378,224 @@ class HeroSlider {
 }
 
 new HeroSlider();
+
+/* ── Selected forms (horizontal carousel) ── */
+const productStory = document.getElementById('productStory');
+const productTrack = document.getElementById('productTrack');
+const productSlides = gsap.utils.toArray('.product-slide');
+const productCounter = document.getElementById('productCounter');
+const productProgress = document.getElementById('productProgress');
+
+if (productStory && productTrack && productSlides.length) {
+  const horizontalTween = gsap.to(productTrack, {
+    x: () => -(productTrack.scrollWidth - window.innerWidth),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: productStory,
+      start: 'top top',
+      end: () => `+=${productTrack.scrollWidth - window.innerWidth}`,
+      pin: true,
+      scrub: 1.15,
+      invalidateOnRefresh: true,
+      anticipatePin: 1,
+      onUpdate(self) {
+        const activeIndex = Math.min(
+          productSlides.length - 1,
+          Math.round(self.progress * (productSlides.length - 1))
+        );
+
+        productCounter.textContent =
+          String(activeIndex + 1).padStart(2, '0') +
+          ' / ' +
+          String(productSlides.length).padStart(2, '0');
+
+        gsap.set(productProgress, { scaleX: self.progress });
+      }
+    }
+  });
+
+  productSlides.forEach((slide) => {
+    const image = slide.querySelector('.product-image');
+    const elements = slide.querySelectorAll(
+      '.product-meta, .product-title, .product-copy, .product-action'
+    );
+
+    gsap.fromTo(
+      image,
+      { xPercent: -6, scale: 1.1 },
+      {
+        xPercent: 6,
+        scale: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: slide,
+          containerAnimation: horizontalTween,
+          start: 'left right',
+          end: 'right left',
+          scrub: 1.2
+        }
+      }
+    );
+
+    gsap.fromTo(
+      elements,
+      { y: 54, opacity: 0, filter: 'blur(0.7rem)' },
+      {
+        y: 0,
+        opacity: 1,
+        filter: 'blur(0rem)',
+        stagger: 0.1,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: slide,
+          containerAnimation: horizontalTween,
+          start: 'left 72%',
+          toggleActions: 'play none none reverse'
+        }
+      }
+    );
+  });
+}
+
+/* ── Guarda-Roupa de Assinatura ── */
+const wardrobeCanvas = document.getElementById('wardrobeCanvas');
+if (wardrobeCanvas) {
+  const ctx = wardrobeCanvas.getContext('2d');
+  const drawSmoke = () => {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = wardrobeCanvas.getBoundingClientRect();
+    wardrobeCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    wardrobeCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    ctx.scale(dpr, dpr);
+
+    const w = rect.width;
+    const h = rect.height;
+    ctx.fillStyle = '#050504';
+    ctx.fillRect(0, 0, w, h);
+
+    for (let i = 0; i < 48; i++) {
+      const x = Math.random() * w;
+      const y = Math.random() * h;
+      const r = Math.random() * Math.min(w, h) * 0.22 + Math.min(w, h) * 0.08;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      const hue = Math.random() > 0.68 ? '58,70,83' : '205,205,198';
+      g.addColorStop(0, `rgba(${hue},${Math.random() * 0.14 + 0.04})`);
+      g.addColorStop(0.45, `rgba(${hue},${Math.random() * 0.055 + 0.02})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    const imgData = ctx.getImageData(0, 0, wardrobeCanvas.width, wardrobeCanvas.height);
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      const n = (Math.random() - 0.5) * 18;
+      imgData.data[i] += n;
+      imgData.data[i + 1] += n;
+      imgData.data[i + 2] += n;
+      imgData.data[i + 3] = 255;
+    }
+    ctx.putImageData(imgData, 0, 0);
+  };
+
+  drawSmoke();
+  window.addEventListener('resize', drawSmoke);
+}
+
+const wardrobeSection = document.querySelector('.wardrobe-section');
+const wardrobeSculpture = document.querySelector('.wardrobe-sculpture');
+const wardrobeHeadline = document.querySelector('.wardrobe-headline');
+const wardrobeCards = document.querySelector('.wardrobe-cards');
+const wardrobeBottomBar = document.querySelector('.wardrobe-bottombar');
+
+if (wardrobeSection && wardrobeSculpture && wardrobeHeadline && wardrobeCards && wardrobeBottomBar) {
+  const ctx = gsap.context(() => {
+    const mainTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wardrobeSection,
+        start: 'top top',
+        end: '+=2800',
+        scrub: true,
+        pin: true
+      }
+    });
+
+    mainTl.fromTo(
+      wardrobeSculpture,
+      { y: -80, scale: 0.72, rotate: -2, opacity: 0.92 },
+      { y: -8, scale: 1.02, rotate: 0, opacity: 1, duration: 0.38, ease: 'none' },
+      0
+    );
+
+    mainTl.to(
+      wardrobeHeadline,
+      { opacity: 0, filter: 'blur(1rem)', scale: 0.96, duration: 0.24, ease: 'none' },
+      0.34
+    );
+
+    mainTl.to(
+      wardrobeSculpture,
+      { y: 8, scale: 1.16, duration: 0.36, ease: 'none' },
+      0.48
+    );
+
+    mainTl.to(
+      wardrobeCards,
+      { opacity: 1, duration: 0.12, ease: 'none' },
+      0.56
+    );
+
+    const cards = gsap.utils.toArray('.service-card');
+    gsap.set(cards, { y: 34, filter: 'blur(8px)', opacity: 0 });
+
+    mainTl.to(
+      cards,
+      { opacity: 1, y: 0, filter: 'blur(0px)', stagger: 0.055, duration: 0.26, ease: 'none' },
+      0.62
+    );
+
+    mainTl.fromTo(
+      wardrobeBottomBar,
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.2, ease: 'none' },
+      0.7
+    );
+  }, wardrobeSection);
+}
+
+/* ── Store (Best Apparel) ── */
+const storeSection = document.querySelector('.store-section');
+if (storeSection) {
+  gsap.utils.toArray('.store-section .reveal').forEach((el) => {
+    gsap.from(el, {
+      y: 50,
+      opacity: 0,
+      filter: 'blur(10px)',
+      duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' }
+    });
+  });
+
+  gsap.utils.toArray('.store-card').forEach((card, i) => {
+    gsap.from(card, {
+      y: 60,
+      opacity: 0,
+      filter: 'blur(6px)',
+      duration: 0.9,
+      ease: 'power3.out',
+      delay: (i % 4) * 0.08,
+      scrollTrigger: { trigger: card, start: 'top 92%' }
+    });
+  });
+
+  document.querySelectorAll('.store-wish').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      gsap.fromTo(btn, { scale: 0.7 }, { scale: 1, duration: 0.5, ease: 'back.out(3)' });
+      btn.classList.toggle('active');
+    });
+  });
+}
