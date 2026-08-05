@@ -352,7 +352,7 @@ body {
 
 @media (max-width: 768px) {
     .product-visual {
-        margin-top: -64px;
+        margin-top: 32px;
     }
 }
 
