@@ -712,6 +712,18 @@ body {
     .wardrobe-cards {
         display: none;
     }
+
+    .wardrobe-label {
+        top: max(1rem, calc(50% - 18rem));
+    }
+
+    .wardrobe-bottombar {
+        justify-content: center;
+    }
+
+    .wardrobe-bottombar > span:not(.wardrobe-bottombar-logo) {
+        display: none;
+    }
 }
 
 .wardrobe-card-tag {
