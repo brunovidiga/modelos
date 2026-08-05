@@ -383,7 +383,6 @@ new HeroSlider();
 const productStory = document.getElementById('productStory');
 const productTrack = document.getElementById('productTrack');
 const productSlides = gsap.utils.toArray('.product-slide');
-const productCounter = document.getElementById('productCounter');
 const productProgress = document.getElementById('productProgress');
 
 if (productStory && productTrack && productSlides.length) {
@@ -399,17 +398,7 @@ if (productStory && productTrack && productSlides.length) {
       invalidateOnRefresh: true,
       anticipatePin: 1,
       onUpdate(self) {
-        const activeIndex = Math.min(
-          productSlides.length - 1,
-          Math.round(self.progress * (productSlides.length - 1))
-        );
-
-        productCounter.textContent =
-          String(activeIndex + 1).padStart(2, '0') +
-          ' / ' +
-          String(productSlides.length).padStart(2, '0');
-
-        gsap.set(productProgress, { scaleX: self.progress });
+        productProgress && gsap.set(productProgress, { scaleX: self.progress });
       }
     }
   });
